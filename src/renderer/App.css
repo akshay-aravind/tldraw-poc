@@ -6,17 +6,26 @@ body {
   position: relative;
   color: white;
   height: 100vh;
-  background: linear-gradient(
+  /* background: linear-gradient(
     200.96deg,
-    #fedc2a -29.09%,
-    #dd5789 51.77%,
-    #7a2c9e 129.35%
-  );
+    #000000 -29.09%,
+    #000000 51.77%,
+    #000000 129.35%
+  ); */
   font-family: sans-serif;
   overflow-y: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.tl-absolute  {
+  /* background-color: blue; */
+  background-color: transparent;
+}
+
+.tl-container {
+background-color: rgba(0, 0, 255, 0) !important;
 }
 
 button {

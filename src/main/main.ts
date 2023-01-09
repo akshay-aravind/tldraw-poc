@@ -10,10 +10,13 @@
  */
 import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
+
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+
+require('@electron/remote/main').initialize();
 
 class AppUpdater {
   constructor() {
@@ -70,6 +73,7 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
+    transparent: true,
     show: false,
     width: 1024,
     height: 728,
