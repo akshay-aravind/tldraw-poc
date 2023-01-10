@@ -27,6 +27,7 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+let childWindow: BrowserWindow | null = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -73,7 +74,6 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
-    transparent: true,
     show: false,
     width: 1024,
     height: 728,
@@ -85,7 +85,35 @@ const createWindow = async () => {
     },
   });
 
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
+  mainWindow.setBackgroundColor('#7FBCD2');
+
+  childWindow = new BrowserWindow({
+    frame: false,
+    transparent: true,
+    show: false,
+    webPreferences: {
+      devTools: false,
+      preload: app.isPackaged
+        ? path.join(__dirname, 'preload.js')
+        : path.join(__dirname, '../../.erb/dll/preload.js'),
+    },
+    parent: mainWindow,
+  });
+
+  childWindow.removeMenu();
+  childWindow.setAlwaysOnTop(true);
+  mainWindow.on('move', function move() {
+    const position: any = mainWindow?.getPosition();
+    childWindow?.setPosition(position[0] + 50, position[1] + 35);
+  });
+
+  mainWindow.on('resize', function resize() {
+    const size: any = mainWindow?.getSize();
+    childWindow?.setSize(size[0] - 100, size[1] - 200);
+  });
+
+  mainWindow.loadURL(resolveHtmlPath(''));
+  childWindow.loadURL(resolveHtmlPath('/draw'));
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
@@ -115,6 +143,13 @@ const createWindow = async () => {
   // eslint-disable-next-line
   new AppUpdater();
 };
+
+ipcMain.on('child-channel', (e, args) => {
+  console.log(args);
+  if (args) {
+    childWindow?.show();
+  } else childWindow?.hide();
+});
 
 /**
  * Add event listeners...

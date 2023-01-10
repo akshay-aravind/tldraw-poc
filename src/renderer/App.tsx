@@ -1,24 +1,23 @@
-import {
-  MemoryRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from 'react-router-dom';
-import icon from '../../assets/icon.svg';
+import { useState } from 'react';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import './App.css';
 import Draw from './Screens/Draw';
 
 const Hello = () => {
-  const navigate = useNavigate();
+  const [child, setChild] = useState<boolean>(true);
+
+  const showChildWindow = () => {
+    setChild(!child);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    window.electron.ipcRenderer.sendMessage('child-channel', child);
+  };
 
   return (
     <div>
-      <div className="Hello">
-        <img width="200" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className="Hello">
-        <button type="button" onClick={() => navigate('/Draw')}>
+      <h1>TLDRAW</h1>
+      <div className="Hello" style={{ marginTop: '80vh' }}>
+        <button type="button" onClick={showChildWindow}>
           Pencil
         </button>
       </div>
@@ -27,11 +26,11 @@ const Hello = () => {
 };
 export default function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Hello />} />
-        <Route path="/Draw" element={<Draw />} />
+        <Route path="/draw" element={<Draw />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }

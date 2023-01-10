@@ -5,7 +5,6 @@ import {
   BrowserWindow,
   MenuItemConstructorOptions,
 } from 'electron';
-import { resolveHtmlPath } from './util';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -283,20 +282,6 @@ export default class MenuBuilder {
             },
           },
         ],
-      },
-      {
-        label: 'Pencil',
-        click: () => {
-          const child = new BrowserWindow({
-            transparent: true,
-            parent: this.mainWindow,
-            modal: true,
-          });
-          child.loadURL(resolveHtmlPath('/Draw'));
-          child.once('ready-to-show', () => {
-            child.show();
-          });
-        },
       },
     ];
 

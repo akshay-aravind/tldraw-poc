@@ -18,4 +18,6 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default function Draw() {
+  return <Home />;
+}
